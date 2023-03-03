@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:1234@localhost:5432/doacao_sangue"
+}
+
+// Creating Table
+model tipos_sanguineos {
+  id         Int       @id @default(autoincrement())
+  tipo       String
+  fator      String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  pessoas    pessoas[]
+}
+
+model estados {
+  id         Int       @id @default(autoincrement())
+  nome       String
+  sigla      String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  cidades    cidades[]
+}
+
+model cidades {
+  id            Int             @id @default(autoincrement())
+  nome          String
+  estado        estados         @relation(fields: [estado_id], references: [id])
+  estado_id     Int
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  pessoas       pessoas[]
+  locais_coleta locais_coleta[]
+  unidades      unidades[]
+}
+
+model pessoas {
+  id          Int              @id @default(autoincrement())
+  nome        String
+  rua         String?
+  numero      String?
+  complemento String?
+  documento   String
+  cidade      cidades          @relation(fields: [cidade_id], references: [id])
+  cidade_id   Int
+  tipo        tipos_sanguineos @relation(fields: [tipo_id], references: [id])
+  tipo_id     Int
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
+  doacoes     doacoes[]
+}
+
+model locais_coleta {
+  id          Int       @id @default(autoincrement())
+  nome        String
+  rua         String
+  numero      String
+  complemento String
+  cidade      cidades   @relation(fields: [cidade_id], references: [id])
+  cidade_id   Int
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  doacoes     doacoes[]
+}
+
+model doacoes {
+  id         Int           @id @default(autoincrement())
+  pessoa     pessoas       @relation(fields: [pessoa_id], references: [id])
+  pessoa_id  Int
+  local      locais_coleta @relation(fields: [local_id], references: [id])
+  local_id   Int
+  data       DateTime      @default(now())
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+  produtos   produtos[]
+}
+
+model produtos {
+  id            Int             @id @default(autoincrement())
+  etiqueta      String
+  doacao        doacoes         @relation(fields: [doacao_id], references: [id])
+  doacao_id     Int
+  validade      DateTime
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  distribuicoes distribuicoes[]
+}
+
+model unidades {
+  id          Int      @id @default(autoincrement())
+  nome        String
+  numero      String
+  complemento String
+  cidade      cidades  @relation(fields: [cidade_id], references: [id])
+  cidade_id   Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model distribuicoes {
+  id         Int      @id @default(autoincrement())
+  produto    produtos @relation(fields: [produto_id], references: [id])
+  produto_id Int
+  unidade_id Int
+  data       DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
