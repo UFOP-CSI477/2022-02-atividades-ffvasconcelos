@@ -35,10 +35,11 @@ A aplicação irá registrar o local onde os pacientes foram vacinados assim com
 mas o sistema não fará registro de controle de estoque e também não irá fazer filtros e relacionar os pacientes com
 locais de vacinação.
 
-<!-- Construir alguns protótipos para a aplicação, disponibilizá-los no Github e descrever o que foi considerado. //-->
 ### 4. Protótipo
 
-  Protótipos para as páginas (descrever quais páginas) foram elaborados, e podem ser encontrados em...
+#### Modelo ER do banco de dados
+
+O modelo entidade relacionamento do banco de dados do sistema está presente no [aqui](https://dbdiagram.io/d/64091bd1296d97641d868279).
 
 ### 5. Referências
 
