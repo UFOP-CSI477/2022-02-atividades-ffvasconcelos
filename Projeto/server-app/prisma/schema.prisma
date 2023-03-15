@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:1234@localhost:5432/vax_db"
+}
+
+model unity {
+  id         Int          @id @default(autoincrement())
+  name       String
+  city       String
+  state      String
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  users      user[]
+  aplication aplication[]
+}
+
+model user {
+  id         Int      @id @default(autoincrement())
+  name       String
+  doc        String
+  password   String
+  unityId    Int
+  unity      unity    @relation(fields: [unityId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model vaccine {
+  id         Int          @id @default(autoincrement())
+  name       String
+  code       String
+  aplication aplication[]
+}
+
+model patient {
+  id         Int          @id @default(autoincrement())
+  name       String
+  doc        String
+  phone      String
+  birthDate  DateTime
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  aplication aplication[]
+}
+
+model aplication {
+  id        Int     @id @default(autoincrement())
+  patientId Int
+  patient   patient @relation(fields: [patientId], references: [id])
+  vaccineId Int
+  vaccine   vaccine @relation(fields: [vaccineId], references: [id])
+  unityId   Int
+  unity     unity   @relation(fields: [unityId], references: [id])
+}

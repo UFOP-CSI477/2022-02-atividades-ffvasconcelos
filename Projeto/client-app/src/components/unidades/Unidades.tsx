@@ -1,16 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../services/api";
+
+interface unity {
+	id: number;
+	name: string;
+	city: string;
+	state: string;
+	created_at: string;
+	updated_at: string;
+}
 
 const Unidades = () => {
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
+	const [openDialog, setOpenDialog] = useState<boolean>(false);
+
+	const [allUnities, setAllUnities] = useState<unity[]>([]);
+	const [selectedUnity, setSelectedUnity] = useState<unity | null>(null);
+
+	useEffect(() => {
+		try {
+			api.get("/unidade").then((response) => {
+				setAllUnities(response.data);
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	}, [openDialog]);
 
 	const showDialog = () => {
 		setOpenDialog(true);
 	};
 	const closeDialog = () => {
+		setSelectedUnity(null);
+
 		setOpenDialog(false);
 	};
 
 	const DialogUnidade = (props: { open: boolean }) => {
+		const [name, setName] = useState<string>(
+			selectedUnity ? selectedUnity.name : ""
+		);
+		const [city, setCity] = useState<string>(
+			selectedUnity ? selectedUnity.city : ""
+		);
+		const [state, setState] = useState<string>(
+			selectedUnity ? selectedUnity.state : ""
+		);
+
+		const handleSave = async () => {
+			if (selectedUnity) {
+				await api
+					.put(`/unidade/${selectedUnity.id}`, { name, city, state })
+					.then((response) => setOpenDialog(false));
+			} else {
+				await api
+					.post("/unidade/", { name, city, state })
+					.then((response) => setOpenDialog(false));
+			}
+		};
+
 		return (
 			<dialog
 				open={props.open}
@@ -22,28 +69,45 @@ const Unidades = () => {
 						<p>Nome: </p>
 						<input
 							type='text'
+							name='name'
+							id='name'
 							className='border-solid border border-slate-400 rounded-lg my-1 px-2'
+							defaultValue={name}
+							onChange={(e) => setName(e.target.value)}
 						/>
 					</div>
 					<div>
 						<p>Cidade: </p>
 						<input
 							type='text'
+							name='city'
+							id='city'
 							className='border-solid border border-slate-400 rounded-lg my-1 px-2'
+							defaultValue={city}
+							onChange={(e) => setCity(e.target.value)}
 						/>
 					</div>
 					<div>
 						<p>Estado: </p>
 						<input
 							type='text'
+							name='state'
+							id='state'
 							className='border-solid border border-slate-400 rounded-lg my-1 px-2'
+							defaultValue={state}
+							onChange={(e) => setState(e.target.value)}
 						/>
 					</div>
 				</div>
 
-				<div className='grid justify-items-end'>
+				<div className='grid grid-cols-4 justify-items-end'>
 					<button
 						onClick={closeDialog}
+						className='bg-red-600 p-2 text-white font-semibold rounded hover:bg-red-800 active:ring active:ring-red-300 mt-4'>
+						Fechar
+					</button>
+					<button
+						onClick={handleSave}
 						className='bg-emerald-500 p-2 text-white font-semibold rounded hover:bg-emerald-600 active:ring active:ring-green-300 mt-4'>
 						Salvar
 					</button>
@@ -70,27 +134,27 @@ const Unidades = () => {
 						</thead>
 
 						<tbody>
-							<tr>
-								<td className='text-center border'>1</td>
-								<td className='text-center border'>Posto de teste</td>
-								<td className='text-center border'>Santa Bárbara</td>
-								<td className='text-center border'>MG</td>
-								<td className='text-center border'>
-									<button
-										onClick={showDialog}
-										className='bg-blue-500 p-2 text-white font-semibold rounded hover:bg-blue-700 active:ring active:ring-blue-400 w-24 mx-2'>
-										Histórico
-									</button>
-									<button
-										onClick={showDialog}
-										className='bg-emerald-500 p-2 text-white font-semibold rounded hover:bg-emerald-600 active:ring active:ring-green-300 w-24 mx-2'>
-										Atualizar
-									</button>
-									<button className='bg-red-600 p-2 text-white font-semibold rounded hover:bg-red-800 active:ring active:ring-red-300 w-24 mx-2'>
-										Excluir
-									</button>
-								</td>
-							</tr>
+							{allUnities.map((data) => (
+								<tr key={data.id}>
+									<td className='text-center border'>{data.id}</td>
+									<td className='text-center border'>{data.name}</td>
+									<td className='text-center border'>{data.city}</td>
+									<td className='text-center border'>{data.state}</td>
+									<td className='text-center border'>
+										<button className='bg-blue-500 p-2 text-white font-semibold rounded hover:bg-blue-700 active:ring active:ring-blue-400 w-24 mx-2'>
+											Histórico
+										</button>
+										<button
+											onClick={showDialog}
+											className='bg-emerald-500 p-2 text-white font-semibold rounded hover:bg-emerald-600 active:ring active:ring-green-300 w-24 mx-2'>
+											Atualizar
+										</button>
+										<button className='bg-red-600 p-2 text-white font-semibold rounded hover:bg-red-800 active:ring active:ring-red-300 w-24 mx-2'>
+											Excluir
+										</button>
+									</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</div>
