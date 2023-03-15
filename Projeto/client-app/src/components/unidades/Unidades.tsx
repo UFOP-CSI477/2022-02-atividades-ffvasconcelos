@@ -35,6 +35,18 @@ const Unidades = () => {
 		setOpenDialog(false);
 	};
 
+	const handleDelete = async (id: number) => {
+		try {
+			await api.delete(`/unidade/${id}`).then((response) => {
+				api.get("/unidade").then((response) => {
+					setAllUnities(response.data);
+				});
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	const DialogUnidade = (props: { open: boolean }) => {
 		const [name, setName] = useState<string>(
 			selectedUnity ? selectedUnity.name : ""
@@ -50,7 +62,10 @@ const Unidades = () => {
 			if (selectedUnity) {
 				await api
 					.put(`/unidade/${selectedUnity.id}`, { name, city, state })
-					.then((response) => setOpenDialog(false));
+					.then((response) => {
+						setOpenDialog(false)
+						setSelectedUnity(null)
+					});
 			} else {
 				await api
 					.post("/unidade/", { name, city, state })
@@ -141,15 +156,22 @@ const Unidades = () => {
 									<td className='text-center border'>{data.city}</td>
 									<td className='text-center border'>{data.state}</td>
 									<td className='text-center border'>
-										<button className='bg-blue-500 p-2 text-white font-semibold rounded hover:bg-blue-700 active:ring active:ring-blue-400 w-24 mx-2'>
+										<button className='bg-blue-500 p-2 m-1 text-white font-semibold rounded hover:bg-blue-700 active:ring active:ring-blue-400 w-24 mx-2'>
 											Histórico
 										</button>
 										<button
-											onClick={showDialog}
-											className='bg-emerald-500 p-2 text-white font-semibold rounded hover:bg-emerald-600 active:ring active:ring-green-300 w-24 mx-2'>
+											onClick={() => {
+												setSelectedUnity(data);
+												showDialog();
+											}}
+											className='bg-emerald-500 p-2 m-1 text-white font-semibold rounded hover:bg-emerald-600 active:ring active:ring-green-300 w-24 mx-2'>
 											Atualizar
 										</button>
-										<button className='bg-red-600 p-2 text-white font-semibold rounded hover:bg-red-800 active:ring active:ring-red-300 w-24 mx-2'>
+										<button
+											onClick={() => {
+												handleDelete(data.id);
+											}}
+											className='bg-red-600 p-2 m-1 text-white font-semibold rounded hover:bg-red-800 active:ring active:ring-red-300 w-24 mx-2'>
 											Excluir
 										</button>
 									</td>

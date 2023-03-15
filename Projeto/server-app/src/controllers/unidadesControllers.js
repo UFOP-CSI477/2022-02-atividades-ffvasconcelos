@@ -30,12 +30,13 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
 	try {
 		const updated = await prisma.unity.update({
-			where: { id: req.params.id },
+			where: { id: parseInt(req.params.id) },
 			data: { ...req.body }
 		})
 
 		res.status(200).send(updated)
 	} catch (error) {
+		console.log(error);
 		res.status(500).send();
 	} 
 })
@@ -43,11 +44,12 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
 	try {
 		const deleted = await prisma.unity.delete({
-			where: { id: req.params.id }
+			where: { id: parseInt(req.params.id) }
 		});
 
 		res.status(200).send(deleted);
 	} catch (error) {
+		console.log(error);
 		res.status(500).send();
 	} 
 })
