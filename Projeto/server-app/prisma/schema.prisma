@@ -39,11 +39,13 @@ model patient {
 }
 
 model aplication {
-  id        Int     @id @default(autoincrement())
-  patientId Int
-  patient   patient @relation(fields: [patientId], references: [id])
-  vaccineId Int
-  vaccine   vaccine @relation(fields: [vaccineId], references: [id])
-  unityId   Int
-  unity     unity   @relation(fields: [unityId], references: [id])
+  id         Int      @id @default(autoincrement())
+  patientId  Int
+  patient    patient  @relation(fields: [patientId], references: [id])
+  vaccineId  Int
+  vaccine    vaccine  @relation(fields: [vaccineId], references: [id])
+  unityId    Int
+  unity      unity    @relation(fields: [unityId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt @default(now())
 }

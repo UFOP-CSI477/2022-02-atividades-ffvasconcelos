@@ -10,11 +10,22 @@ interface unity {
 	updated_at: string;
 }
 
+interface aplications {
+	id: number;
+	patient: string;
+	doc: string;
+	vaccine: string;
+	code: string;
+	date: string
+}
+
 const Unidades = () => {
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 
 	const [allUnities, setAllUnities] = useState<unity[]>([]);
 	const [selectedUnity, setSelectedUnity] = useState<unity | null>(null);
+
+	const [openHistory, setOpenHistory] = useState<boolean>(false)
 
 	useEffect(() => {
 		try {
@@ -24,7 +35,7 @@ const Unidades = () => {
 		} catch (error) {
 			console.log(error);
 		}
-	}, [openDialog]);
+	}, [openDialog, openHistory]);
 
 	const showDialog = () => {
 		setOpenDialog(true);
@@ -63,8 +74,8 @@ const Unidades = () => {
 				await api
 					.put(`/unidade/${selectedUnity.id}`, { name, city, state })
 					.then((response) => {
-						setOpenDialog(false)
-						setSelectedUnity(null)
+						setOpenDialog(false);
+						setSelectedUnity(null);
 					});
 			} else {
 				await api
@@ -131,9 +142,66 @@ const Unidades = () => {
 		);
 	};
 
+	const DialogHistory = (props: { open: boolean }) => {
+		const [aplications, setAplications] = useState<aplications[]>([]);
+
+		useEffect(() => {
+			api.get(`/aplicacao/unityRegister/${selectedUnity?.id}`).then(response => setAplications(response.data))
+		}, [openHistory])
+
+		return (
+			<dialog
+				open={props.open}
+				className='border-solid border-2 border-slate-500 mx-20 rounded-xl'>
+				<h2 className='font-bold text-xl'>Histórico da unidade:</h2>
+				<div>
+					<div className='border-solid border-2 my-2 border-gray-300 rounded-md h-96 scroll-mr-2'>
+						<table className='table-fixed border-collapse border auto-cols-max w-full'>
+							<thead>
+								<tr>
+									<th className='border w-24'>ID</th>
+									<th className='border w-80'>Paciente</th>
+									<th className='border w-44'>Documento</th>
+									<th className='border w-44'>Vacina</th>
+									<th className='border w-92'>Código</th>
+									<th className='border w-92'>Data</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								{aplications.map((data) => (
+									<tr key={data.id}>
+										<td className='text-center border'>{data.id}</td>
+										<td className='text-center border'>{data.patient}</td>
+										<td className='text-center border'>{data.doc}</td>
+										<td className='text-center border'>{data.vaccine}</td>
+										<td className='text-center border'>{data.code}</td>
+										<td className='text-center border'>{`${new Date(
+											data.date
+										).getDate()}/${new Date(data.date).getMonth() + 1}/${
+											new Date(data.date).getFullYear()
+										}`}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+					<div className='grid justify-items-end'>
+						<button
+							onClick={() => setOpenHistory(false)}
+							className='bg-red-600 p-2 text-white font-semibold rounded hover:bg-red-800 active:ring active:ring-red-300 mt-2'>
+							Fechar
+						</button>
+					</div>
+				</div>
+			</dialog>
+		);
+	};
+
 	return (
 		<div className='mx-16 mt-6'>
 			<DialogUnidade open={openDialog} />
+			<DialogHistory open={openHistory} />
 			<h2 className='font-bold text-xl'>Registro de unidades:</h2>
 			<div>
 				<div className='border-solid border-2 my-2 border-gray-300 rounded-md h-96 scroll-mr-2'>
@@ -156,7 +224,12 @@ const Unidades = () => {
 									<td className='text-center border'>{data.city}</td>
 									<td className='text-center border'>{data.state}</td>
 									<td className='text-center border'>
-										<button className='bg-blue-500 p-2 m-1 text-white font-semibold rounded hover:bg-blue-700 active:ring active:ring-blue-400 w-24 mx-2'>
+										<button
+											onClick={() => {
+												setSelectedUnity(data);
+												setOpenHistory(true)
+											}}
+											className='bg-blue-500 p-2 m-1 text-white font-semibold rounded hover:bg-blue-700 active:ring active:ring-blue-400 w-24 mx-2'>
 											Histórico
 										</button>
 										<button

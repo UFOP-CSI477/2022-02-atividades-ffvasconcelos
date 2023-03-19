@@ -5,7 +5,6 @@ const Homepage = () => {
 
 	return (
 		<div className='grid justify-items-stretch justify-self-center mt-16'>
-
 			<div className='justify-self-center'>
 				<h1 className='text-2xl font-bold '>Bem vindo ao Vax!</h1>
 			</div>
@@ -20,7 +19,7 @@ const Homepage = () => {
 			<div className='m-10 justify-self-center'>
 				<ul className='list-disc'>
 					<li>
-						<Link to='/teste' className='hover:text-cyan-900'>
+						<Link to='/aplicacao' className='hover:text-cyan-900'>
 							Aplicar vacina
 						</Link>
 					</li>
@@ -30,12 +29,12 @@ const Homepage = () => {
 						</Link>
 					</li>
 					<li>
-						<Link to='/teste' className='hover:text-cyan-900'>
+						<Link to='/pacientes' className='hover:text-cyan-900'>
 							Registrar paciente
 						</Link>
 					</li>
 					<li>
-						<Link to='/teste' className='hover:text-cyan-900'>
+						<Link to='/vacinas' className='hover:text-cyan-900'>
 							Registrar vacina
 						</Link>
 					</li>
