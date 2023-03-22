@@ -26,6 +26,15 @@ const Menu = () => {
 				<li>
 					<Link to='/pessoas'>Lista de pessoas</Link>
 				</li>
+				<li>
+					<Link to='/doacoes'>Lista de doações</Link>
+				</li>
+				<li>
+					<Link to='/produtos'>Lista de produtos</Link>
+				</li>
+				<li>
+					<Link to='/distribuicoes'>Lista de distribuições</Link>
+				</li>
 			</ul>
 		</div>
 	);

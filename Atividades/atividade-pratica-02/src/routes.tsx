@@ -14,6 +14,15 @@ import UpdateUnidade from './components/unidades/UpdateUnidade';
 import ListPessoas from './components/pessoas/ListPessoas';
 import CreatePessoa from './components/pessoas/CreatePessoa';
 import UpdatePessoa from './components/pessoas/UpdatePessoa';
+import ListDoacoes from './components/doacoes/ListDoacoes';
+import CreateDoacao from './components/doacoes/CreateDoacao';
+import UpdateDoacao from './components/doacoes/UpdateDoacao';
+import ListProdutos from './components/produtos/ListProdutos';
+import CreateProduto from './components/produtos/CreateProduto';
+import UpdateProduto from './components/produtos/UpdateProduto';
+import ListDistribuicoes from './components/distribuicoes/ListDistribuicoes';
+import CreateDistribuicao from './components/distribuicoes/CreateDistribuicao';
+import UpdateDistribuicao from './components/distribuicoes/UpdateDistribuicao';
 
 const AppRoutes = () => {
   return (
@@ -35,6 +44,15 @@ const AppRoutes = () => {
 				<Route path='/pessoas' element={<ListPessoas />} />
 				<Route path='/pessoas/create' element={<CreatePessoa />} />
 				<Route path='/pessoas/:id' element={<UpdatePessoa />} />
+				<Route path='/doacoes' element={<ListDoacoes />} />
+				<Route path='/doacoes/create' element={<CreateDoacao />} />
+				<Route path='/doacoes/:id' element={<UpdateDoacao />} />
+				<Route path='/produtos' element={<ListProdutos />} />
+				<Route path='/produtos/create' element={<CreateProduto />} />
+				<Route path='/produtos/:id' element={<UpdateProduto />} />
+				<Route path='/distribuicoes' element={<ListDistribuicoes />} />
+				<Route path='/distribuicoes/create' element={<CreateDistribuicao />} />
+				<Route path='/distribuicoes/:id' element={<UpdateDistribuicao />} />
 			</Routes>
 		</BrowserRouter>
 	);
