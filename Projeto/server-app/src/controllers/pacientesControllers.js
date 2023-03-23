@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
 		const data = await prisma.patient.create({
 			data: {
 				name: req.body.name,
-				doc: req.body.name,
+				doc: req.body.doc,
 				phone: req.body.phone,
 				birthDate: new Date(req.body.birth),
 			},
