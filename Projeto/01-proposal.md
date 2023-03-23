@@ -41,7 +41,3 @@ locais de vacinação.
 
 O modelo entidade relacionamento do banco de dados do sistema está presente no [aqui](https://dbdiagram.io/d/64091bd1296d97641d868279).
 
-### 5. Referências
-
-  Referências podem ser incluídas, caso necessário. Utilize o padrão ABNT.
-
